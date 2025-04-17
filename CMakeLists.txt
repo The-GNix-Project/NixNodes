@@ -14,14 +14,19 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # List your source files
 set(SOURCES
     src/main.cpp
-    src/mainwindow.cpp
-    src/welcome_widget.cpp
+    src/MainWindow.cpp
+    src/WelcomeWidget.cpp
+
+    src/nodes/ConnectionItem.cpp
+    src/nodes/NodeItem.cpp
 )
 
 # List your header files (optional for IDE integration)
 set(HEADERS
-    include/mainwindow.hpp
-    include/welcome_widget.hpp
+    include/MainWindow.hpp
+    include/WelcomeWidget.hpp
+    include/ConnectionItem.hpp
+    include/NodeItem.hpp
 )
 
 # Add a Qt resource file if needed

@@ -1,4 +1,4 @@
-#include "welcome_widget.hpp"
+#include "WelcomeWidget.hpp"
 #include <QLabel>
 #include <QVBoxLayout>
 

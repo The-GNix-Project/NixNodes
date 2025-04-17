@@ -1,5 +1,5 @@
-#include "mainwindow.hpp"
-#include "welcome_widget.hpp"
+#include "MainWindow.hpp"
+#include "WelcomeWidget.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
