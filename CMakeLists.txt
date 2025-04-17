@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(NixNodes VERSION 0.1 LANGUAGES CXX)
 
-# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -11,7 +10,6 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 # Include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# List your source files
 set(SOURCES
     src/main.cpp
     src/MainWindow.cpp
@@ -21,7 +19,6 @@ set(SOURCES
     src/nodes/NodeItem.cpp
 )
 
-# List your header files (optional for IDE integration)
 set(HEADERS
     include/MainWindow.hpp
     include/WelcomeWidget.hpp
@@ -29,7 +26,6 @@ set(HEADERS
     include/NodeItem.hpp
 )
 
-# Add a Qt resource file if needed
 # set(RESOURCES
 #     resources/resources.qrc
 # )
