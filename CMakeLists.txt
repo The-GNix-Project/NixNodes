@@ -12,6 +12,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(SOURCES
     src/main.cpp
+    src/nodes/io.cpp
+    src/nodes/node.cpp
 )
 
 set(HEADERS
