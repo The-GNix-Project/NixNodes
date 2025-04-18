@@ -12,18 +12,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(SOURCES
     src/main.cpp
-    src/MainWindow.cpp
-    src/WelcomeWidget.cpp
-
-    src/nodes/ConnectionItem.cpp
-    src/nodes/NodeItem.cpp
 )
 
 set(HEADERS
-    include/MainWindow.hpp
-    include/WelcomeWidget.hpp
-    include/ConnectionItem.hpp
-    include/NodeItem.hpp
+
 )
 
 # set(RESOURCES

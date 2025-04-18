@@ -15,45 +15,86 @@
 // You should have received a copy of the GNU General Public License                        |
 // along with GNix.  If not, see <https://www.gnu.org/licenses/>.                           |
 // -----------------------------------------------------------------------------------------|
+#include <iostream>
+#include <string>
+#include <regex>
+#include <QString>
+#include <QRegularExpression>
 
-#include <QApplication>
-#include <QGraphicsView>
-#include "NodeItem.hpp"
-#include "ConnectionItem.hpp"
+#define REGEX_MATCH(var, rx) std::regex_match(var, std::regex(rx))
+
+class IO {
+public:
+    template<typename T>
+    IO(T init_name) {
+        change_name(init_name);
+    }
+
+    bool change_name(const QString& new_name) {
+        if (new_name.length() > 52) {
+            return false;
+        }
+
+        // Regex: starts with letter/_ and followed by letters, numbers, _, or space
+        QRegularExpression rx(R"(^[a-zA-Z_][a-zA-Z0-9_ ]*$)");
+        if (rx.match(new_name).hasMatch()) {
+            name = new_name;
+            return true;
+        }
+
+        return false;
+    }
+    
+    bool change_name(const std::string& new_name) {
+        return change_name(QString::fromStdString(new_name));
+    }
+
+    bool change_name(const char* new_name) {
+        return change_name(QString::fromUtf8(new_name));
+    }
+
+    std::string format_name() {
+        QString clean = name.trimmed().toLower();
+
+        clean.replace(QRegularExpression("[^a-zA-Z0-9_]"), "_");
+
+        clean.replace(QRegularExpression("_+"), "_");
+
+        clean = clean.trimmed();
+        if (clean.startsWith('_') || clean.endsWith('_'))
+            clean = clean.mid(clean.startsWith('_') ? 1 : 0,
+                            clean.length() - (clean.endsWith('_') ? 1 : 0));
+
+        if (!clean.isEmpty() && !QRegularExpression("^[a-zA-Z_]").match(clean).hasMatch()) {
+            clean = "_" + clean;
+        }
+        return clean.toStdString();
+    }
+
+    QString get_name() {return name;}
+
+protected:
+    QString name;
+};
+
+class Input: public IO {    
+public:
+    template<typename T>
+    Input(T init_name) {
+        change_name(init_name);
+    }
+};
+
+class Output: public IO {    
+public:
+    template<typename T>
+    Output(T init_name) {
+        change_name(init_name);
+    }
+};
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
-
-    QGraphicsScene scene;
-    scene.setBackgroundBrush(QColor("#2e3440"));
-
-    QGraphicsView view(&scene);
-    view.setRenderHint(QPainter::Antialiasing);
-    view.setDragMode(QGraphicsView::ScrollHandDrag);
-    view.setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    view.setWindowTitle("Qt6 Node Editor MVP");
-
-    // TODO: Make a constructor for these nodes and connections
-    // Create & add nodes
-    auto *n1 = new NodeItem("Node A");
-    auto *n2 = new NodeItem("Node B");
-    n1->setPos(50, 50);
-    n2->setPos(300, 200);
-    scene.addItem(n1);
-    scene.addItem(n2);
-
-    // Connect them
-    auto *conn = new ConnectionItem(n1, n2);
-    scene.addItem(conn);
-
-    // Update path when nodes move (QGraphicsObject provides xChanged/yChanged signals)
-    QObject::connect(n1, &NodeItem::xChanged, [=]{ conn->updatePath(n1, n2); });
-    QObject::connect(n1, &NodeItem::yChanged, [=]{ conn->updatePath(n1, n2); });
-    QObject::connect(n2, &NodeItem::xChanged, [=]{ conn->updatePath(n1, n2); });
-    QObject::connect(n2, &NodeItem::yChanged, [=]{ conn->updatePath(n1, n2); });
-
-    view.resize(600, 400);
-    view.show();
-
-    return app.exec();
+    auto input = Input("my Input");
+    std::cout << input.format_name();
+    return 0;
 }
