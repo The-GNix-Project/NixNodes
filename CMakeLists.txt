@@ -12,12 +12,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(SOURCES
     src/main.cpp
-    src/nodes/io.cpp
-    src/nodes/node.cpp
+    src/lang/io.cpp
+    src/lang/node.cpp
 )
 
 set(HEADERS
-
+    include/lang/io.hpp
+    include/lang/node.hpp
 )
 
 # set(RESOURCES
