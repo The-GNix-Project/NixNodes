@@ -1,4 +1,4 @@
-#include "nodes/io.hpp"
+#include "lang/io.hpp"
 
 bool IO::change_name(const QString& new_name) {
     if (new_name.length() > 52) {
@@ -42,3 +42,42 @@ std::string IO::format_name() {
 }
 
 QString IO::get_name() {return name;}
+
+QRectF IO::boundingRect() const {
+    return { 0, 0, 10, 10 };
+}
+
+void IO::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+    painter->setBrush(Qt::red);  // Highlight clickable area
+    painter->drawRect(boundingRect());
+    painter->setBrush(isSelected() ? Qt::lightGray : Qt::white);
+    painter->setPen(Qt::black);
+    painter->drawEllipse(QPoint(5, 5), 5, 5);
+}
+
+void IO::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+    grabMouse(); 
+    qDebug() << "IO clicked:" << name << "at scene pos:" << scenePos();
+    QPointF scenePos = mapToScene(event->pos());
+    emit dragStarted(scenePos); // Critical: Use scene position, this caused a lot of pain cause of a silly mistake
+    event->accept();
+}
+
+void IO::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
+    QPointF scenePos = mapToScene(event->pos());
+    emit dragUpdated(scenePos);
+    event->accept();
+}
+
+void IO::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
+    ungrabMouse();
+    QPointF scenePos = mapToScene(event->pos());
+    emit dragEnded(scenePos);
+    event->accept();
+}
+
+QPainterPath IO::shape() const {
+    QPainterPath path;
+    path.addEllipse(boundingRect());  // now clicks on the circle count
+    return path;
+}

@@ -14,10 +14,14 @@ set(SOURCES
     src/main.cpp
     src/lang/io.cpp
     src/lang/node.cpp
+    src/lang/graph.cpp
+    src/lang/connection.cpp
 )
 
 set(HEADERS
     include/lang/io.hpp
+    include/lang/graph.hpp
+    include/lang/connection.hpp
     include/lang/node.hpp
 )
 
@@ -37,3 +41,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Link Qt libraries
 target_link_libraries(${PROJECT_NAME} Qt6::Widgets)
+
+add_subdirectory(extern/QtNodes)
+include_directories(${QtNodes_INCLUDE_DIRS})

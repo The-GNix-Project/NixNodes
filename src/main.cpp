@@ -22,30 +22,46 @@
 #include <memory>
 
 #include <QString>
+#include <QDebug>
 #include <QRegularExpression>
+#include <QApplication>
 
-#include "nodes/io.hpp"
-#include "nodes/node.hpp"
+#include "lang/io.hpp"
+#include "lang/node.hpp"
+#include "lang/graph.hpp"
 
-auto key_selector = [](auto pair){return pair.first;};
+int main(int argc, char* argv[]) {
+    QApplication app(argc, argv);
+    qDebug() << "App Started\n";
 
-int main(int argc, char *argv[]) {
-    using namespace std;
-    auto mynode = Node("myNode");
-    mynode.add_input(std::make_unique<Input>("i1"));
-    mynode.add_input(std::make_unique<Input>("i2"));
-    mynode.add_output(std::make_unique<Output>("o1"));
+    Graph scene;
 
-    auto inputs = mynode.get_inputs();
-    vector<string> input_keys(inputs.size());
-    transform(inputs.begin(), inputs.end(), input_keys.begin(), key_selector);
-    cout << "Inputs:\n";
-    for (string key : input_keys) cout << " " << key << "\n";
+    QGraphicsView view(&scene);
+    view.setRenderHint(QPainter::Antialiasing);
+    view.setDragMode(QGraphicsView::ScrollHandDrag);
+    view.setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    view.setWindowTitle("NixNodes Prototype");
 
-    auto outputs = mynode.get_outputs();
-    vector<string> output_keys(outputs.size());
-    transform(outputs.begin(), outputs.end(), output_keys.begin(), key_selector);
-    cout << "Outputs:\n";
-    for (string key : output_keys) cout << " " << key << "\n";
-    return 0;
+    auto* node = new Node("node");
+    node->add_input(std::make_unique<Input>("myInput1"));
+    node->add_input(std::make_unique<Input>("myInput2"));
+    node->add_output(std::make_unique<Output>("myOutput1"));
+    node->add_output(std::make_unique<Output>("myOutput2"));
+    node->add_output(std::make_unique<Output>("myOutput3"));
+    node->setPos(50, 50);
+    scene.addNode(node);
+
+    auto* node2 = new Node("node2");
+    node2->add_input(std::make_unique<Input>("myInput3"));
+    node2->add_input(std::make_unique<Input>("myInput4"));
+    node2->add_output(std::make_unique<Output>("myOutput4"));
+    node2->add_output(std::make_unique<Output>("myOutput5"));
+    node2->add_output(std::make_unique<Output>("myOutput6"));
+    node2->setPos(100, 100);
+    scene.addNode(node2);
+
+    view.resize(600, 400);
+    view.show();
+
+    return app.exec();
 }
